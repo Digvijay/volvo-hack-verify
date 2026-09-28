@@ -11,6 +11,10 @@ __pycache__/
 .venv/
 venv/
 
+# Notebook run artifacts (may embed output such as URLs); ship the clean explore.ipynb only.
+executed-explore.ipynb
+.ipynb_checkpoints/
+
 # OS / editor cruft
 .DS_Store
 Thumbs.db

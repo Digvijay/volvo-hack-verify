@@ -61,6 +61,40 @@ pwsh ./verify-lab.ps1 -EnvFile C:\path\to\team-01.env
 Everything is read-only except that one throwaway Cosmos container, which is removed immediately. It
 never writes your keys anywhere or changes your data.
 
+## Explore every capability (notebook)
+
+Prefer to poke at the services yourself? Open [`explore.ipynb`](explore.ipynb) in VS Code. It is a
+guided, run-top-to-bottom notebook that exercises **every operation your `.env` unlocks**, one cell
+at a time, again with **no Azure sign-in**:
+
+1. Call the chat model (inference)
+2. Create embeddings
+3. Search the hackathon data (the existing `hackdata-index` vector index)
+4. Create your **own** search index, upload docs, and query it
+5. Cosmos DB create / write / read / query
+6. Blob storage read (over the container SAS)
+7. Build a container image locally (Docker)
+8. Push it to your Azure Container Registry
+9. Deploy it to Azure Container Apps and print the **public URL**
+10. Test the deployed app, then clean everything up
+
+### How to use it
+
+1. Put your team `.env` next to the notebook (same folder as `verify-lab.ps1`).
+2. Create the environment once: `python -m venv .venv` then
+   `.venv\Scripts\python -m pip install -r requirements.txt`.
+3. Open `explore.ipynb` in VS Code. If you see **"Install/Enable suggested extensions: Python +
+   Jupyter"**, accept it (this repo recommends them) - they are required to run notebooks. The
+   **`.venv` kernel is then preselected** (via `.vscode/settings.json`); if prompted, just confirm
+   `Python (.venv)`.
+4. Run the cells top to bottom with the Run button.
+
+Sections 1-6 only need the keys. Sections 7-10 (build / push / deploy a container) additionally
+need **Docker Desktop running** and use the deploy identity in your `.env` (a service principal, so
+no interactive login). The final cell deletes the demo container app, index, and Cosmos container so
+nothing keeps costing money. If you are on a corporate proxy and hit a TLS error, set
+`INSECURE_SSL=true` in your `.env` (same switch as the app and the verify script).
+
 ## See your credentials power a real app
 
 Once the check is green, run the included starter web app to watch the **same `.env` keys** drive a
