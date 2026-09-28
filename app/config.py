@@ -2,6 +2,15 @@
 import os
 from pathlib import Path
 
+# Trust the machine's certificate store so a corporate TLS-inspecting proxy (self-signed
+# root CA) does not break HTTPS from Python. Must run before any TLS client is created.
+try:
+    import truststore
+
+    truststore.inject_into_ssl()
+except Exception:
+    pass
+
 from dotenv import load_dotenv
 
 # The .env sits at the repo root, one level above this package.
@@ -28,6 +37,10 @@ COSMOS_ENDPOINT = _get("COSMOS_ENDPOINT")
 COSMOS_KEY = _get("COSMOS_KEY")
 COSMOS_DATABASE = _get("COSMOS_DATABASE", "truckoffer")
 QUOTES_CONTAINER = "quotes"
+
+# Last-resort escape hatch when a TLS proxy cannot be satisfied via the OS trust store.
+INSECURE_SSL = _get("INSECURE_SSL", "").lower() in ("1", "true", "yes")
+SSL_VERIFY = not INSECURE_SSL
 
 
 def missing() -> list[str]:

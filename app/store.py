@@ -12,7 +12,7 @@ _container = None
 def _quotes():
     global _container
     if _container is None:
-        client = CosmosClient(config.COSMOS_ENDPOINT, credential=config.COSMOS_KEY)
+        client = CosmosClient(config.COSMOS_ENDPOINT, credential=config.COSMOS_KEY, connection_verify=config.SSL_VERIFY)
         db = client.create_database_if_not_exists(config.COSMOS_DATABASE)
         _container = db.create_container_if_not_exists(
             id=config.QUOTES_CONTAINER, partition_key=PartitionKey(path="/id")

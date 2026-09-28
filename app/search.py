@@ -21,7 +21,7 @@ def retrieve(query: str, top: int = 6) -> list[dict]:
         ],
     }
     headers = {"api-key": config.SEARCH_KEY, "Content-Type": "application/json"}
-    with httpx.Client(timeout=60) as client:
+    with httpx.Client(timeout=60, verify=config.SSL_VERIFY) as client:
         r = client.post(url, headers=headers, json=body)
         r.raise_for_status()
         docs = r.json().get("value", [])

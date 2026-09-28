@@ -155,3 +155,6 @@ add routes, or swap `sample_trucks.json`.
   committed. `.env.example` shows the shape with placeholders and is safe to share.
 - The script only reads and does a tiny throwaway write (a temporary Cosmos container, removed
   immediately). It does not change your data.
+- **Corporate network / TLS proxy.** The app trusts your machine's certificate store (via
+  `truststore`), so HTTPS works behind proxies that inject a self-signed root CA. If you still see
+  `CERTIFICATE_VERIFY_FAILED`, set `INSECURE_SSL=true` in your `.env` as a last resort.

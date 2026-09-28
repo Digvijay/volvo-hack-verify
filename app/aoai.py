@@ -18,7 +18,7 @@ def chat(messages: list[dict], *, json_mode: bool = False, max_tokens: int = 200
     body["reasoning_effort"] = "low"
     headers = {"api-key": config.AOAI_KEY, "Content-Type": "application/json"}
 
-    with httpx.Client(timeout=180) as client:
+    with httpx.Client(timeout=180, verify=config.SSL_VERIFY) as client:
         r = client.post(url, headers=headers, json=body)
         if r.status_code == 400 and "reasoning_effort" in body:
             body.pop("reasoning_effort")
