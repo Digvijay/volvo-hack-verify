@@ -1,0 +1,42 @@
+[
+  {
+    "id": "FH-AERO-500",
+    "model": "Volvo FH Aero",
+    "cab": "Globetrotter XL",
+    "engine": "D13 500 hp",
+    "fuel": "Diesel",
+    "axle": "4x2 tractor",
+    "application": "Long-haul",
+    "highlights": ["I-Save fuel economy", "Camera Monitor System", "Adaptive Cruise Control", "I-Shift automated transmission"]
+  },
+  {
+    "id": "FH16-780",
+    "model": "Volvo FH16",
+    "cab": "Globetrotter XL",
+    "engine": "D17 780 hp",
+    "fuel": "Diesel",
+    "axle": "6x4 tractor",
+    "application": "Heavy haulage",
+    "highlights": ["High torque D17 engine", "Heavy-duty I-Shift", "Volvo Dynamic Steering", "Tandem axle lift"]
+  },
+  {
+    "id": "FMX-460",
+    "model": "Volvo FMX",
+    "cab": "Day cab",
+    "engine": "D13 460 hp",
+    "fuel": "Diesel",
+    "axle": "8x4 rigid",
+    "application": "Construction",
+    "highlights": ["Heavy-duty chassis", "Automatic Traction Control", "Steel bumper", "PTO ready"]
+  },
+  {
+    "id": "FM-ELECTRIC",
+    "model": "Volvo FM Electric",
+    "cab": "Sleeper cab",
+    "engine": "Electric 490 kW",
+    "fuel": "Battery-electric",
+    "axle": "6x2 tractor",
+    "application": "Regional distribution",
+    "highlights": ["Zero tailpipe emissions", "Up to 300 km range", "Regenerative braking", "Quiet operation"]
+  }
+]

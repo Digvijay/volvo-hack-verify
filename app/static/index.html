@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Volvo Hack Starter</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+</head>
+
+<body>
+    <header>
+        <div class="brand">VOLVO<span>hack starter</span></div>
+        <div id="cfg" class="cfg"></div>
+    </header>
+
+    <main>
+        <section class="col trucks">
+            <h2>1. Pick a truck</h2>
+            <div id="truckGrid" class="grid"></div>
+        </section>
+
+        <section class="col studio">
+            <div class="step">
+                <div class="stepHead">
+                    <h2>2. Interpret</h2>
+                    <button id="btnInterpret" disabled>Interpret configuration</button>
+                </div>
+                <pre id="outInterpret" class="out"></pre>
+            </div>
+
+            <div class="step">
+                <div class="stepHead">
+                    <h2>3. Ground (AI Search RAG)</h2>
+                    <button id="btnGround" disabled>Ground in the data</button>
+                </div>
+                <div id="outGround" class="out"></div>
+            </div>
+
+            <div class="step">
+                <div class="stepHead">
+                    <h2>4. Compose</h2>
+                    <button id="btnCompose" disabled>Compose proposal</button>
+                </div>
+                <div id="outCompose" class="out"></div>
+            </div>
+
+            <div class="step">
+                <div class="stepHead">
+                    <h2>5. Approve</h2>
+                    <button id="btnApprove" disabled>Save to Cosmos</button>
+                </div>
+                <div id="outApprove" class="out"></div>
+            </div>
+        </section>
+
+        <section class="col side">
+            <div class="panel">
+                <h2>Saved quotes</h2>
+                <div id="quotes" class="quotes"></div>
+            </div>
+            <div class="panel chat">
+                <h2>Ask the data</h2>
+                <div id="chatLog" class="chatLog"></div>
+                <form id="chatForm">
+                    <input id="chatInput" placeholder="e.g. What is I-Save?" autocomplete="off" />
+                    <button type="submit">Ask</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast"></div>
+    <script src="/static/app.js"></script>
+</body>
+
+</html>

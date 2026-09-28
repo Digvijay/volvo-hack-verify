@@ -1,0 +1,287 @@
+:root {
+    --blue: #0d3b66;
+    --blue2: #1560a8;
+    --ink: #16232e;
+    --line: #dfe6ec;
+    --bg: #f4f6f8;
+    --ok: #1a7f4b;
+    --warn: #b26a00;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: var(--blue);
+    color: #fff;
+}
+
+.brand {
+    font-weight: 800;
+    letter-spacing: 3px;
+    font-size: 20px;
+}
+
+.brand span {
+    font-weight: 400;
+    letter-spacing: 1px;
+    font-size: 12px;
+    opacity: .8;
+    margin-left: 8px;
+}
+
+.cfg {
+    font-size: 12px;
+    opacity: .85;
+    text-align: right;
+    line-height: 1.5;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 280px 1fr 320px;
+    gap: 16px;
+    padding: 16px;
+    align-items: start;
+}
+
+.col h2 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--blue);
+    margin: 0 0 10px;
+}
+
+.grid {
+    display: grid;
+    gap: 10px;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px;
+    cursor: pointer;
+    transition: border-color .15s, box-shadow .15s;
+}
+
+.card:hover {
+    border-color: var(--blue2);
+}
+
+.card.sel {
+    border-color: var(--blue2);
+    box-shadow: 0 0 0 2px rgba(21, 96, 168, .2);
+}
+
+.card h3 {
+    margin: 0 0 4px;
+    font-size: 15px;
+}
+
+.card .meta {
+    font-size: 12px;
+    color: #5a6b78;
+}
+
+.tags {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.tag {
+    font-size: 11px;
+    background: #eef3f8;
+    color: var(--blue);
+    border-radius: 20px;
+    padding: 2px 8px;
+}
+
+.studio {
+    display: grid;
+    gap: 14px;
+}
+
+.step {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.stepHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.stepHead h2 {
+    margin: 0;
+}
+
+button {
+    background: var(--blue2);
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+button:disabled {
+    background: #a9b7c2;
+    cursor: not-allowed;
+}
+
+button.busy {
+    opacity: .7;
+    cursor: progress;
+}
+
+.out {
+    margin: 12px 0 0;
+    background: #f8fafc;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 13px;
+    white-space: pre-wrap;
+    max-height: 340px;
+    overflow: auto;
+}
+
+.out:empty {
+    display: none;
+}
+
+.item {
+    border-bottom: 1px solid var(--line);
+    padding: 8px 0;
+}
+
+.item:last-child {
+    border-bottom: 0;
+}
+
+.item b {
+    color: var(--blue);
+}
+
+.src {
+    font-size: 11px;
+    color: #5a6b78;
+}
+
+.proposal h3 {
+    margin: 0 0 4px;
+    color: var(--blue);
+}
+
+.proposal .sec {
+    margin: 8px 0;
+}
+
+.proposal .sec h4 {
+    margin: 0 0 2px;
+    font-size: 13px;
+}
+
+.panel {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 16px;
+}
+
+.quotes .q {
+    border-bottom: 1px solid var(--line);
+    padding: 6px 0;
+    font-size: 13px;
+}
+
+.quotes .q .who {
+    color: #5a6b78;
+    font-size: 12px;
+}
+
+.chat .chatLog {
+    max-height: 260px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.bubble {
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    max-width: 92%;
+}
+
+.bubble.me {
+    align-self: flex-end;
+    background: var(--blue2);
+    color: #fff;
+}
+
+.bubble.bot {
+    align-self: flex-start;
+    background: #eef3f8;
+}
+
+.chat form {
+    display: flex;
+    gap: 8px;
+}
+
+.chat input {
+    flex: 1;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 13px;
+}
+
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity .2s;
+    pointer-events: none;
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+.toast.err {
+    background: #a01f2e;
+}
