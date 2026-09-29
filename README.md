@@ -201,6 +201,47 @@ Search**, the **MCP toolbox**, **image generation**, and `DefaultAzureCredential
 Entra sign-in or a model that is not deployed here. To extend, edit the prompts in `app/main.py`,
 add routes, or swap `sample_trucks.json`.
 
+## Reindex after adding or removing files
+
+Your three indexes are fed by Azure AI Search **blob indexers** that read from folders in your
+storage container:
+
+| Index | Reads from |
+| --- | --- |
+| `allfactsheets-index` | `factsheets/all/` |
+| `diesel-truck-index` | `factsheets/diesel/` |
+| `electric-truck-index` | `factsheets/electric/` |
+
+Upload or delete blobs in those folders, then run `reindex.ps1` (reads your `.env`, no `az login`):
+
+```powershell
+# Added or changed files -> incremental re-run of all three indexers (fast)
+pwsh ./reindex.ps1
+
+# Just one index
+pwsh ./reindex.ps1 -Index diesel-truck-index
+
+# Removed files too -> rebuild from the CURRENT blobs (drop + recreate + run)
+pwsh ./reindex.ps1 -Rebuild
+pwsh ./reindex.ps1 -Rebuild -Index electric-truck-index
+```
+
+- **Adding** is incremental: the indexer tracks blob `LastModified`, so a plain re-run only embeds
+  new/changed files.
+- **Removing** is not reflected by a plain re-run (the datasource has no deletion policy), so the
+  deleted file's chunks linger. `-Rebuild` drops the index and rebuilds it from what is in the folder
+  now, so removals disappear.
+
+Section 12 of [`explore.ipynb`](explore.ipynb) shows the same as a copy-paste example (it does not run).
+
+## Scripts in this repo
+
+| Script | What it does | Example |
+| --- | --- | --- |
+| `decrypt-env.ps1` | Decrypt the `<team>.env.enc` you were sent into `.env`. | `pwsh ./decrypt-env.ps1` |
+| `verify-lab.ps1` | Check every service works with your keys (no sign-in). | `pwsh ./verify-lab.ps1` |
+| `reindex.ps1` | Re-run (adds) or rebuild (adds + removes) the fact-sheet indexes. | `pwsh ./reindex.ps1 -Rebuild` |
+
 ## Notes
 
 - **Keep your `.env` private.** It contains keys. This repo gitignores `.env`, so it is never
