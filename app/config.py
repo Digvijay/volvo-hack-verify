@@ -31,7 +31,7 @@ EMBEDDING_DEPLOYMENT = _get("EMBEDDING_DEPLOYMENT", "text-embedding-3-large")
 
 SEARCH_ENDPOINT = _get("SEARCH_ENDPOINT").rstrip("/")
 SEARCH_KEY = _get("SEARCH_KEY")
-SEARCH_INDEX = _get("SEARCH_INDEX", "hackdata-index")
+SEARCH_INDEX = _get("SEARCH_INDEX", "allfactsheets-index")
 
 COSMOS_ENDPOINT = _get("COSMOS_ENDPOINT")
 COSMOS_KEY = _get("COSMOS_KEY")

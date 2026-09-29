@@ -7,7 +7,7 @@
     it. It exercises every resource with the keys in that file, so a green result proves your
     environment is ready to build on:
       - Foundry chat model + embeddings
-      - Azure AI Search (list + query the hack data)
+      - Azure AI Search (list + query the three fact-sheet indexes)
       - Cosmos DB (create / write / read / query / delete)
       - Blob storage (list + read the data set)
       - A small retrieval-augmented answer that uses the services together, like a real app.
@@ -70,7 +70,7 @@ $chat = Cfg 'CHAT_DEPLOYMENT' 'gpt-5.6-luna'
 $embed = Cfg 'EMBEDDING_DEPLOYMENT' 'text-embedding-3-large'
 $searchEndpoint = (Cfg 'SEARCH_ENDPOINT').TrimEnd('/')
 $searchKey = Cfg 'SEARCH_KEY'
-$searchIndex = Cfg 'SEARCH_INDEX' 'hackdata-index'
+$searchIndex = Cfg 'SEARCH_INDEX' 'allfactsheets-index'
 $cosmosEndpoint = (Cfg 'COSMOS_ENDPOINT').TrimEnd('/')
 $cosmosKey = Cfg 'COSMOS_KEY'
 $cosmosDb = Cfg 'COSMOS_DATABASE' 'truckoffer'
@@ -107,13 +107,21 @@ if ($searchEndpoint -and $searchKey) {
     if ($r.ok) { Add-Result 'Search service access (list indexes)' 'PASS' ("indexes: " + (@($r.data.value.name) -join ', ')) }
     else { Add-Result 'Search service access (list indexes)' 'FAIL' $r.error }
 
-    $r = Invoke-Api 'POST' "$searchEndpoint/indexes/$searchIndex/docs/search?api-version=2024-07-01" $h (@{ search = 'truck'; top = 3; select = 'title,content' } | ConvertTo-Json)
-    if ($r.ok) {
-        $hits = @($r.data.value)
-        if ($hits.Count -gt 0) { $topDoc = $hits[0]; Add-Result "Search query '$searchIndex'" 'PASS' ("$($hits.Count) hit(s); top: " + $topDoc.title) }
-        else { Add-Result "Search query '$searchIndex'" 'WARN' 'query worked but 0 docs (indexer may still be running)' }
+    # Query each of the three fact-sheet indexes; keep the default index's top hit for the RAG step.
+    $indexNames = [ordered]@{ }
+    $indexNames[(Cfg 'SEARCH_INDEX_ALL' $searchIndex)] = 'all'
+    $indexNames[(Cfg 'SEARCH_INDEX_DIESEL' 'diesel-truck-index')] = 'diesel'
+    $indexNames[(Cfg 'SEARCH_INDEX_ELECTRIC' 'electric-truck-index')] = 'electric'
+    foreach ($ix in $indexNames.Keys) {
+        $r = Invoke-Api 'POST' "$searchEndpoint/indexes/$ix/docs/search?api-version=2024-07-01" $h (@{ search = 'truck'; top = 3; select = 'title,content' } | ConvertTo-Json)
+        if ($r.ok) {
+            $hits = @($r.data.value)
+            if ($ix -eq $searchIndex -and $hits.Count -gt 0) { $topDoc = $hits[0] }
+            if ($hits.Count -gt 0) { Add-Result "Search query '$ix'" 'PASS' ("$($hits.Count) hit(s); top: " + $hits[0].title) }
+            else { Add-Result "Search query '$ix'" 'WARN' 'query worked but 0 docs (indexer may still be running)' }
+        }
+        else { Add-Result "Search query '$ix'" 'FAIL' $r.error }
     }
-    else { Add-Result "Search query '$searchIndex'" 'FAIL' $r.error }
 }
 else { Add-Result 'Azure AI Search' 'FAIL' 'SEARCH_ENDPOINT / SEARCH_KEY missing from .env' }
 

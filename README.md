@@ -52,7 +52,8 @@ pwsh ./verify-lab.ps1 -EnvFile C:\path\to\team-01.env
 
 - **Foundry chat + embeddings** - `api-key` header on the OpenAI-compatible endpoint.
 - **Azure AI Search** - `api-key` header to list indexes and run a hybrid (keyword + vector) query
-  on `hackdata-index`.
+  on each of the three fact-sheet indexes (`allfactsheets-index`, `diesel-truck-index`,
+  `electric-truck-index`).
 - **Cosmos DB** - signs each request with an HMAC of the master key (`type=master`), then creates a
   temporary container, upserts / reads / queries a document, and deletes the container.
 - **Blob storage** - uses the container `STORAGE_SAS` to list and read one blob.
@@ -69,7 +70,7 @@ at a time, again with **no Azure sign-in**:
 
 1. Call the chat model (inference)
 2. Create embeddings
-3. Search the hackathon data (the existing `hackdata-index` vector index)
+3. Search the fact sheets (three vector indexes: all / diesel / electric)
 4. Create your **own** search index, upload docs, and query it
 5. Cosmos DB create / write / read / query
 6. Blob storage read (over the container SAS)
@@ -118,7 +119,9 @@ The `.env` keys work directly from any language/SDK, from any machine, no sign-i
 
 - **Foundry**: `AZURE_OPENAI_ENDPOINT` + `AZURE_OPENAI_KEY` (Azure OpenAI-compatible; `api-key` header),
   chat deployment `CHAT_DEPLOYMENT`, embeddings `EMBEDDING_DEPLOYMENT`.
-- **Azure AI Search**: `SEARCH_ENDPOINT` + `SEARCH_KEY`, index `SEARCH_INDEX` (chunked + vectorized).
+- **Azure AI Search**: `SEARCH_ENDPOINT` + `SEARCH_KEY`, three chunked + vectorized indexes -
+  `SEARCH_INDEX` (default `allfactsheets-index`), `SEARCH_INDEX_DIESEL` (`diesel-truck-index`),
+  and `SEARCH_INDEX_ELECTRIC` (`electric-truck-index`). One key queries all three.
 - **Cosmos DB**: `COSMOS_ENDPOINT` + `COSMOS_KEY`, database `COSMOS_DATABASE`.
 - **Blob storage**: `STORAGE_CONNECTION_STRING` (or `STORAGE_SAS`), container `STORAGE_CONTAINER`.
 - **Container registry** (optional, to push your own image): `ACR_LOGIN_SERVER` / `ACR_USERNAME` /
@@ -130,7 +133,7 @@ The repo also ships a small **working web app** (FastAPI + static UI) so you hav
 reference, not just a check. It walks the full flow using only your `.env` keys (no sign-in):
 
 1. Pick a truck and **interpret** its configuration (chat model)
-2. **Ground** it in the hackathon data (Azure AI Search hybrid + vector RAG over `hackdata-index`)
+2. **Ground** it in the fact-sheet data (Azure AI Search hybrid + vector RAG over `allfactsheets-index`)
 3. **Compose** a customer-ready proposal (chat model)
 4. **Approve** to save the quote to Cosmos DB
 5. **Ask the data** - a grounded sales chat with citations
@@ -156,7 +159,7 @@ Module map:
 
 - `app/config.py` - loads the `.env` and exposes the keys/endpoints.
 - `app/aoai.py` - calls the Foundry chat model over the OpenAI-compatible `api-key` surface.
-- `app/search.py` - hybrid (keyword + vector) retrieval over `hackdata-index`.
+- `app/search.py` - hybrid (keyword + vector) retrieval over `allfactsheets-index` (default `SEARCH_INDEX`).
 - `app/store.py` - saves/reads quotes in Cosmos with the account key.
 - `app/main.py` - the API routes and the prompts that tie it together.
 - `app/data/sample_trucks.json` - the bundled trucks you pick from.
@@ -173,7 +176,7 @@ Request flow (each step is one route):
 | `GET /api/trucks`, `/api/quotes`, `/api/config`, `/health` | Read helpers used by the UI. |
 
 The grounding (RAG) detail: the search request sends both a keyword `search` and a **text** vector
-query. Because `hackdata-index` has a built-in vectorizer, the Search service embeds the query
+query. Because `allfactsheets-index` has a built-in vectorizer, the Search service embeds the query
 server-side, so the app never calls the embeddings model itself. The retrieved `title`/`content`
 become the only context passed to the model, and the prompt tells it to answer solely from those
 sources (so it says "not covered" instead of inventing facts).
