@@ -3,6 +3,7 @@
 *credential*
 *secret*
 .env
+*.env.enc
 *.log
 
 # Python
