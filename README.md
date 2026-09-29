@@ -17,9 +17,24 @@ A green summary means you are ready to start building.
 ## Prerequisites
 
 - [PowerShell 7+](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) (`pwsh`)
-- Your team's **`.env`** file, handed to you by the organizers
+- Your team's encrypted **`<team>.env.enc`** file, handed to you by the organizers (decrypt it below)
 
 No Azure CLI, no `az login`, no portal access needed.
+
+## Decrypt your team `.env`
+
+The organizers send your credentials as an **encrypted** `<team>.env.enc` file; the password comes
+separately (out of band). Decrypt it once into a `.env` next to the script:
+
+```powershell
+# from the repo folder, with your .env.enc saved here
+pwsh ./decrypt-env.ps1
+# or point at a specific file:
+pwsh ./decrypt-env.ps1 -In rg-team-05.env.enc
+```
+
+Enter the password when prompted; it writes `.env` next to the script. Keep both the `.env.enc` and
+the password private. (AES-256; the `.enc` is opaque base64, so it passes content filters.)
 
 ## Run it
 
@@ -27,7 +42,7 @@ No Azure CLI, no `az login`, no portal access needed.
 git clone <this-repo-url>
 cd volvo-hack-verify
 
-# Save the .env your coach gave you next to this script (see .env.example for the shape).
+# Decrypt your team file first (see above), or drop a plain .env here (see .env.example for the shape).
 # Then run:
 pwsh ./verify-lab.ps1
 ```
